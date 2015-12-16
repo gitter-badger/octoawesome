@@ -73,6 +73,10 @@ namespace OctoAwesome.Client.Controls
             Bitmap blocks = new Bitmap(size * TEXTURESIZE, size * TEXTURESIZE);
             using (Graphics g = Graphics.FromImage(blocks))
             {
+				g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+				g.SmoothingMode  = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+				g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+				g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                 int counter = 0;
                 foreach (var bitmap in bitmaps)
                 {
