@@ -78,7 +78,15 @@ namespace OctoAwesome.Client.Controls
                 {
                     int x = counter % size;
                     int y = (int)(counter / size);
-                    g.DrawImage(bitmap, new System.Drawing.Rectangle(TEXTURESIZE * x, TEXTURESIZE * y, TEXTURESIZE, TEXTURESIZE));
+					//TODO: ugly fix
+					using (System.Drawing.TextureBrush br = new System.Drawing.TextureBrush (bitmap, System.Drawing.Drawing2D.WrapMode.TileFlipXY)) {
+						float maxSz = Math.Max (bitmap.Width, bitmap.Height);
+						br.TranslateTransform (TEXTURESIZE * x, TEXTURESIZE * y);
+						br.ScaleTransform (TEXTURESIZE/maxSz, TEXTURESIZE/maxSz);
+		
+						g.FillRectangle (br, new RectangleF (TEXTURESIZE * x, TEXTURESIZE * y, TEXTURESIZE, TEXTURESIZE));
+						//g.DrawImage (bitmap, new System.Drawing.Rectangle (TEXTURESIZE * x, TEXTURESIZE * y, TEXTURESIZE, TEXTURESIZE));
+					}
                     counter++;
                 }
             }
