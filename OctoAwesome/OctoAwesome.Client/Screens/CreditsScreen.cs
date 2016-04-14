@@ -1,19 +1,18 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Storage;
 using OctoAwesome.Client.Components;
 using MonoGameUi;
-using Microsoft.Xna.Framework.Input;
+using engenious;
+
 
 namespace OctoAwesome.Client.Screens
 {
     class CreditsScreen : BaseScreen
     {
-        public CreditsScreen(ScreenComponent manager) : base(manager)
+        public CreditsScreen(ScreenComponent manager)
+            : base(manager)
         {
             Padding = new Border(0, 0, 0, 0);
 
@@ -44,14 +43,15 @@ namespace OctoAwesome.Client.Screens
                 CanFocus = false
             };
 
-            StackPanel crewList = new StackPanel(manager) {
+            StackPanel crewList = new StackPanel(manager)
+            {
                 MinWidth = 700,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 Orientation = Orientation.Vertical,
             };
             crewScroll.Content = crewList;
 
-            foreach(CrewMember member in crew)
+            foreach (CrewMember member in crew)
             {
                 Panel memberPanel = new Panel(manager)
                 {

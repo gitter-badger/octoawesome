@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGameUi;
+﻿using MonoGameUi;
 using OctoAwesome.Client.Components;
 using System;
+using engenious;
+using engenious.Graphics;
 
 namespace OctoAwesome.Client.Controls
 {
@@ -12,7 +12,8 @@ namespace OctoAwesome.Client.Controls
 
         public PlayerComponent Player { get; set; }
 
-        public CompassControl(ScreenComponent screenManager) : base(screenManager)
+        public CompassControl(ScreenComponent screenManager)
+            : base(screenManager)
         {
             Player = screenManager.Player;
 

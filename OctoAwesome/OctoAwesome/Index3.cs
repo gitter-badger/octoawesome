@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using engenious;
 
 namespace OctoAwesome
 {
-/// <summary>
+    /// <summary>
     /// Struktur zur Definierung einer dreidimensionalen Index-Position.
     /// </summary>
     public struct Index3
@@ -44,13 +44,19 @@ namespace OctoAwesome
         /// </summary>
         /// <param name="index">2D-Basis</param>
         /// <param name="z">Z-Anteil</param>
-        public Index3(Index2 index, int z) : this(index.X, index.Y, z) { }
+        public Index3(Index2 index, int z)
+            : this(index.X, index.Y, z)
+        {
+        }
 
         /// <summary>
         /// Initialisierung
         /// </summary>
         /// <param name="index">3D-Basis</param>
-        public Index3(Index3 index) : this(index.X, index.Y, index.Z) { }
+        public Index3(Index3 index)
+            : this(index.X, index.Y, index.Z)
+        {
+        }
 
         /// <summary>
         /// Normalisiert die X-Achse auf die angegebene Größe.
@@ -437,8 +443,8 @@ namespace OctoAwesome
         {
             return
                 (X << 20) +
-                (Y << 10) +
-                Z;
+            (Y << 10) +
+            Z;
         }
 
         /// <summary>

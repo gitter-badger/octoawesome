@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using MonoGameUi;
+﻿using MonoGameUi;
 using OctoAwesome.Client.Screens;
 using System;
+using engenious;
 
 namespace OctoAwesome.Client.Components
 {
@@ -13,7 +13,8 @@ namespace OctoAwesome.Client.Components
 
         public CameraComponent Camera { get { return Game.Camera; } }
 
-        public ScreenComponent(OctoGame game) : base(game)
+        public ScreenComponent(OctoGame game)
+            : base(game)
         {
             Game = game;
             TitlePrefix = "OctoAwesome";

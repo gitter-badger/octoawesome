@@ -1,15 +1,18 @@
-﻿using Microsoft.Xna.Framework.Input;
-using MonoGameUi;
+﻿using MonoGameUi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using engenious.Input;
 
 namespace OctoAwesome.Client.Screens
 {
     public abstract class BaseScreen : Screen
     {
-        public BaseScreen(IScreenManager manager) : base(manager) { }
+        public BaseScreen(IScreenManager manager)
+            : base(manager)
+        {
+        }
 
         protected override void OnKeyPress(KeyEventArgs args)
         {

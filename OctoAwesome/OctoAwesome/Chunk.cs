@@ -147,7 +147,8 @@ namespace OctoAwesome
             MetaData[index] = meta;
 
             //TODO: ChangeCounter überdenken, eventuell eine bool
-            ChangeCounter++;
+            if (batch == 0)
+                ChangeCounter++;
         }
 
         /// <summary>
@@ -174,7 +175,8 @@ namespace OctoAwesome
             MetaData[GetFlatIndex(x, y, z)] = meta;
 
             //TODO: ChangeCounter überdenken, eventuell eine bool
-            ChangeCounter++;
+            if (batch == 0)
+                ChangeCounter++;
         }
 
         /// <summary>
@@ -201,7 +203,8 @@ namespace OctoAwesome
             Resources[GetFlatIndex(x, y, z)] = resources;
 
             //TODO: ChangeCounter überdenken, eventuell eine bool
-            ChangeCounter++;
+            if (batch == 0)
+                ChangeCounter++;
         }
 
         /// <summary>
@@ -215,8 +218,25 @@ namespace OctoAwesome
         private int GetFlatIndex(int x, int y, int z)
         {
             return ((z & (CHUNKSIZE_Z - 1)) << (LimitX + LimitY))
-                   | ((y & (CHUNKSIZE_Y - 1)) << LimitX)
-                   | ((x & (CHUNKSIZE_X - 1)));
+            | ((y & (CHUNKSIZE_Y - 1)) << LimitX)
+            | ((x & (CHUNKSIZE_X - 1)));
+        }
+
+        private int batch = 0;
+
+        public void BeginBatch()
+        {
+            System.Threading.Interlocked.Increment(ref batch);
+        }
+
+        public void EndBatch()
+        {
+            System.Threading.Interlocked.Decrement(ref batch);
+            if (batch <= 0)
+            {
+                batch = 0;
+                ChangeCounter++;
+            }
         }
     }
 }

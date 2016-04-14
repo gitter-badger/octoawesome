@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using MonoGameUi;
+﻿using MonoGameUi;
 using OctoAwesome.Client.Components;
 using OctoAwesome.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using engenious;
 
 namespace OctoAwesome.Client.Screens
 {
@@ -16,7 +16,8 @@ namespace OctoAwesome.Client.Screens
         Button deleteButton, createButton, playButton;
         Grid mainStack;
 
-        public LoadScreen(ScreenComponent manager) : base(manager)
+        public LoadScreen(ScreenComponent manager)
+            : base(manager)
         {
             Manager = manager;
 
@@ -52,6 +53,7 @@ namespace OctoAwesome.Client.Screens
 
             //Level Stack
             Listbox<IUniverse> levelList = new Listbox<IUniverse>(manager);
+            
             levelList.Background = new BorderBrush(Color.White * 0.5f);
             levelList.VerticalAlignment = VerticalAlignment.Stretch;
             levelList.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -106,7 +108,7 @@ namespace OctoAwesome.Client.Screens
                     return;
 
                 // Sicherstellen, dass universe nicht geladen ist
-                if (ResourceManager.Instance.CurrentUniverse != null && 
+                if (ResourceManager.Instance.CurrentUniverse != null &&
                     ResourceManager.Instance.CurrentUniverse.Id == levelList.SelectedItem.Id)
                     return;
 

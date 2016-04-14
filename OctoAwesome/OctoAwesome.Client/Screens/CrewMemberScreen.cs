@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MonoGameUi;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using OctoAwesome.Client.Components;
+using engenious.Graphics;
 
 namespace OctoAwesome.Client.Screens
 {
     class CrewMemberScreen : BaseScreen
     {
-        public CrewMemberScreen(ScreenComponent manager, CrewMember member) : base(manager)
+        public CrewMemberScreen(ScreenComponent manager, CrewMember member)
+            : base(manager)
         {
             VerticalAlignment = VerticalAlignment.Center;
             HorizontalAlignment = HorizontalAlignment.Center;
@@ -71,7 +71,8 @@ namespace OctoAwesome.Client.Screens
             };
             if (member.PictureFilename == null)
                 profileImage.Texture = manager.Content.LoadTexture2DFromFile("./Assets/OctoAwesome.Client/Crew/base.png", manager.GraphicsDevice);
-            else profileImage.Texture = manager.Content.LoadTexture2DFromFile(member.PictureFilename, manager.GraphicsDevice);
+            else
+                profileImage.Texture = manager.Content.LoadTexture2DFromFile(member.PictureFilename, manager.GraphicsDevice);
             horizontalStack.Controls.Add(profileImage);
 
 
@@ -107,7 +108,8 @@ namespace OctoAwesome.Client.Screens
             foreach (CrewMember.Achievements achievement in member.AchievementList)
             {
                 achievementString += " " + achievement.ToString();
-                if (member.AchievementList.IndexOf(achievement) != member.AchievementList.Count - 1) achievementString += ", ";
+                if (member.AchievementList.IndexOf(achievement) != member.AchievementList.Count - 1)
+                    achievementString += ", ";
             }
             StackPanel achievementStack = new StackPanel(manager);
             achievementStack.VerticalAlignment = VerticalAlignment.Top;

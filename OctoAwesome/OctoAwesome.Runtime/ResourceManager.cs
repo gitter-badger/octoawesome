@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -43,6 +42,7 @@ namespace OctoAwesome.Runtime
         #region Singleton
 
         private static ResourceManager instance = null;
+
         /// <summary>
         /// Die Instanz des ResourceManagers.
         /// </summary>
@@ -88,8 +88,8 @@ namespace OctoAwesome.Runtime
         public void NewUniverse(string name, int seed)
         {
             universe = new Universe(Guid.NewGuid(), name, seed);
-                persistenceManager.SaveUniverse(universe);
-            }
+            persistenceManager.SaveUniverse(universe);
+        }
 
         /// <summary>
         /// Gibt alle Universen zurück, die geladen werden können.

@@ -17,7 +17,8 @@ namespace OctoAwesome
         /// <param name="chunks">Die Chunks für die Säule</param>
         /// <param name="planet">Der Index des Planeten</param>
         /// <param name="columnIndex">Die Position der Säule</param>
-        public ChunkColumn(IChunk[] chunks, int planet, Index2 columnIndex) : this()
+        public ChunkColumn(IChunk[] chunks, int planet, Index2 columnIndex)
+            : this()
         {
             Planet = planet;
             Chunks = chunks;
@@ -175,7 +176,7 @@ namespace OctoAwesome
         {
             int index = z / Chunk.CHUNKSIZE_Z;
             z %= Chunk.CHUNKSIZE_Z;
-            Chunks[index].SetBlock(x, y, z,block,meta);
+            Chunks[index].SetBlock(x, y, z, block, meta);
         }
 
         /// <summary>
@@ -189,7 +190,7 @@ namespace OctoAwesome
         {
             int index = z / Chunk.CHUNKSIZE_Z;
             z %= Chunk.CHUNKSIZE_Z;
-            Chunks[index].SetBlockMeta(x, y, z,  meta);
+            Chunks[index].SetBlockMeta(x, y, z, meta);
         }
 
         /// <summary>
@@ -340,6 +341,18 @@ namespace OctoAwesome
                     }
                 }
             }
+        }
+
+        public void BeginBatch()
+        {
+            foreach (IChunk chunk in Chunks)
+                chunk.BeginBatch();
+        }
+
+        public void EndBatch()
+        {
+            foreach (IChunk chunk in Chunks)
+                chunk.EndBatch();
         }
     }
 }

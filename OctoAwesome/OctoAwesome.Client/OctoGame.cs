@@ -1,13 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using OctoAwesome;
+﻿using OctoAwesome;
 using OctoAwesome.Client.Components;
 using OctoAwesome.Client.Controls;
 using OctoAwesome.Runtime;
 using System;
 using System.Configuration;
 using System.Linq;
+using engenious;
 
 namespace OctoAwesome.Client
 {
@@ -16,7 +14,6 @@ namespace OctoAwesome.Client
     /// </summary>
     internal class OctoGame : Game
     {
-        GraphicsDeviceManager graphics;
 
         public CameraComponent Camera { get; private set; }
 
@@ -29,16 +26,13 @@ namespace OctoAwesome.Client
         public OctoGame()
             : base()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1080;
-            graphics.PreferredBackBufferHeight = 720;
 
             Content.RootDirectory = "Content";
-            Window.Title = "OctoAwesome";
+            Title = "OctoAwesome";
             IsMouseVisible = true;
-            Window.AllowUserResizing = true;
+            //AllowUserResizing = true;
 
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 15);
+            //TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 15);
 
             int viewrange;
             if (int.TryParse(SettingsManager.Get("Viewrange"), out viewrange))
@@ -66,15 +60,16 @@ namespace OctoAwesome.Client
             Screen.DrawOrder = 1;
             Components.Add(Screen);
 
-            Window.ClientSizeChanged += (s, e) =>
+            Resized += (s, e) =>
             {
-                if (Window.ClientBounds.Height == graphics.PreferredBackBufferHeight &&
-                   Window.ClientBounds.Width == graphics.PreferredBackBufferWidth)
+                //TODO;
+                /*if (Window.ClientBounds.Height == graphics.PreferredBackBufferHeight &&
+                    Window.ClientBounds.Width == graphics.PreferredBackBufferWidth)
                     return;
 
                 graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
                 graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                graphics.ApplyChanges();
+                graphics.ApplyChanges();*/
             };
         }
 

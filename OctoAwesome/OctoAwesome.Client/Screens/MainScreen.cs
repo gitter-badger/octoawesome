@@ -1,15 +1,15 @@
 ﻿using MonoGameUi;
 using OctoAwesome.Client.Components;
-using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 
 namespace OctoAwesome.Client.Screens
 {
     internal sealed class MainScreen : BaseScreen
     {
-        public MainScreen(ScreenComponent manager) : base(manager)
+        public MainScreen(ScreenComponent manager)
+            : base(manager)
         {
-            Padding = new Border(0,0,0,0);
+            Padding = new Border(0, 0, 0, 0);
 
             Image background = new Image(manager);
             background.Texture = manager.Content.LoadTexture2DFromFile("./Assets/OctoAwesome.Client/background.png", manager.GraphicsDevice);
@@ -61,7 +61,10 @@ namespace OctoAwesome.Client.Screens
             Button exitButton = Button.TextButton(manager, Languages.OctoClient.Exit);
             exitButton.HorizontalAlignment = HorizontalAlignment.Stretch;
             exitButton.Margin = new Border(0, 0, 0, 10);
-            exitButton.LeftMouseClick += (s, e) => { manager.Exit(); };
+            exitButton.LeftMouseClick += (s, e) =>
+            {
+                manager.Exit();
+            };
             stack.Controls.Add(exitButton);
         }
     }

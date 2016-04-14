@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace OctoAwesome
 {
@@ -41,10 +42,12 @@ namespace OctoAwesome
         /// <param name="loadDelegate">Delegat, der nicht geladene ChunkColumns nachläd.</param>
         /// <param name="saveDelegate">Delegat, der nicht mehr benötigte ChunkColumns abspeichert.</param>
         public GlobalChunkCache(Func<int, Index2, IChunkColumn> loadDelegate, 
-            Action<int, Index2, IChunkColumn> saveDelegate)
+                                Action<int, Index2, IChunkColumn> saveDelegate)
         {
-            if (loadDelegate == null) throw new ArgumentNullException("loadDelegate");
-            if (saveDelegate == null) throw new ArgumentNullException("saveDelegate");
+            if (loadDelegate == null)
+                throw new ArgumentNullException("loadDelegate");
+            if (saveDelegate == null)
+                throw new ArgumentNullException("saveDelegate");
 
             this.loadDelegate = loadDelegate;
             this.saveDelegate = saveDelegate;
@@ -59,25 +62,36 @@ namespace OctoAwesome
         /// <param name="position">Position des Chunks</param>
         /// <param name="writeable">Gibt an, ob der Subscriber schreibend zugreifen will</param>
         /// <returns></returns>
-        public IChunkColumn Subscribe(int planet,Index2 position, bool writeable)
+        public IChunkColumn Subscribe(int planet, Index2 position, bool writeable)
         {
+            CacheItem cacheItem = null;
+
             lock (lockObject)
             {
-                CacheItem cacheItem = null;
                 if (!cache.TryGetValue(new Index3(position, planet), out cacheItem))
                 {
                     cacheItem = new CacheItem()
                     {
                         References = 0,
-                        ChunkColumn = loadDelegate(planet,position),
+                        WritableReferences = 0,
+                        ChunkColumn = null,
                     };
                     
                     cache.Add(new Index3(position, planet), cacheItem);
                 }
+
                 cacheItem.References++;
-                if (writeable) cacheItem.WritableReferences++;
-                return cacheItem.ChunkColumn;
+                if (writeable)
+                    cacheItem.WritableReferences++;
             }
+            
+            lock (cacheItem)
+            {
+                if (cacheItem.ChunkColumn == null)
+                    cacheItem.ChunkColumn = loadDelegate(planet, position);
+            }
+
+            return cacheItem.ChunkColumn;
         }
 
         /// <summary>
@@ -89,7 +103,7 @@ namespace OctoAwesome
         public IChunkColumn Peek(int planet, Index2 position)
         {
             CacheItem cacheItem = null;
-            if (cache.TryGetValue(new Index3(position, planet),out cacheItem))
+            if (cache.TryGetValue(new Index3(position, planet), out cacheItem))
             {
                 return cacheItem.ChunkColumn;
             }
@@ -105,6 +119,8 @@ namespace OctoAwesome
             {
                 foreach (var item in cache.Values)
                 {
+                    if (item.ChunkColumn == null)
+                        continue;
                     saveDelegate(
                         item.ChunkColumn.Planet, 
                         item.ChunkColumn.Index, 
@@ -123,28 +139,35 @@ namespace OctoAwesome
         /// <param name="planet">Die Id des Planeten</param>
         /// <param name="position">Die Position des freizugebenden Chunks</param>
         /// <param name="writeable">Ist der Chunk schreibbar abonniert worden?</param>
-        public void Release(int planet,Index2 position, bool writeable)
+        public void Release(int planet, Index2 position, bool writeable)
         {
+            CacheItem cacheItem = null;
             lock (lockObject)
             {
-                CacheItem cacheItem = null;
-                if (!cache.TryGetValue(new Index3(position,planet), out cacheItem))
+                if (!cache.TryGetValue(new Index3(position, planet), out cacheItem))
                 {
                     throw new NotSupportedException("Kein Chunk für Position in Cache");
                 }
 
                 cacheItem.References--;
-                if (writeable) cacheItem.WritableReferences--;
+                if (writeable)
+                    cacheItem.WritableReferences--;
+            }
 
-                if (cacheItem.WritableReferences <= 0)
+            lock (cacheItem)
+            {
+                if (cacheItem.References <= 0 && cacheItem.ChunkColumn != null)
                 {
-                    saveDelegate(planet,position, cacheItem.ChunkColumn);
+                    saveDelegate(planet, position, cacheItem.ChunkColumn);
                 }
+            }
 
+            lock (lockObject)
+            {
                 if (cacheItem.References <= 0)
                 {
                     cacheItem.ChunkColumn = null;
-                    cache.Remove(new Index3(position,planet));
+                    cache.Remove(new Index3(position, planet));
                 }
             }
         }
@@ -153,7 +176,7 @@ namespace OctoAwesome
         /// Element für den Cache
         /// </summary>
         private class CacheItem
-        {            
+        {
             /// <summary>
             /// Die Zahl der Subscriber, die das Item Abboniert hat.
             /// </summary>

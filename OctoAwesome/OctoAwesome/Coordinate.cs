@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using engenious;
 
 namespace OctoAwesome
 {
@@ -162,9 +162,9 @@ namespace OctoAwesome
         private void Normalize()
         {
             Index3 shift = new Index3(
-                (int)Math.Floor(position.X),
-                (int)Math.Floor(position.Y),
-                (int)Math.Floor(position.Z));
+                               (int)Math.Floor(position.X),
+                               (int)Math.Floor(position.Y),
+                               (int)Math.Floor(position.Z));
 
             block += shift;
             position = position - shift;
@@ -215,9 +215,9 @@ namespace OctoAwesome
         {
             return
                 "(" + Planet + "/" +
-                (block.X + position.X).ToString("0.00") + "/" +
-                (block.Y + position.Y).ToString("0.00") + "/" +
-                (block.Z + position.Z).ToString("0.00") + ")";
+            (block.X + position.X).ToString("0.00") + "/" +
+            (block.Y + position.Y).ToString("0.00") + "/" +
+            (block.Z + position.Z).ToString("0.00") + ")";
         }
     }
 }

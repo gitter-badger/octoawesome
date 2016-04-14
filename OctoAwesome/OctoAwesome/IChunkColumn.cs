@@ -121,5 +121,9 @@ namespace OctoAwesome
         /// <param name="columnIndex">Die Position der Säule</param>
         /// <param name="planetId">Der Index des Planeten</param>
         void Deserialize(Stream stream, IDefinitionManager definitionManager, int planetId, Index2 columnIndex);
+
+        void BeginBatch();
+
+        void EndBatch();
     }
 }

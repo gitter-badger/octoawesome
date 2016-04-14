@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using engenious;
 
 namespace OctoAwesome
 {
@@ -36,13 +36,19 @@ namespace OctoAwesome
         /// Initialisierung
         /// </summary>
         /// <param name="value">Initialwerte</param>
-        public Index2(Index2 value) : this(value.X, value.Y) {}
+        public Index2(Index2 value)
+            : this(value.X, value.Y)
+        {
+        }
 
         /// <summary>
         /// Initialisierung
         /// </summary>
         /// <param name="value">Initialwerte (X und Y Anteil wird übernommen)</param>
-        public Index2(Index3 value) : this(value.X, value.Y) {}
+        public Index2(Index3 value)
+            : this(value.X, value.Y)
+        {
+        }
 
         /// <summary>
         /// Normalisiert die X-Achse auf die angegebene Größe.
@@ -134,7 +140,7 @@ namespace OctoAwesome
         /// </summary>
         /// <param name="index">Der zu normalisierende Index2</param>
         /// <param name="size">3D Size</param>
-        public static Index2 NormalizeXY(Index2 index,Index3 size)
+        public static Index2 NormalizeXY(Index2 index, Index3 size)
         {
             index.NormalizeXY(size);
             return index;
@@ -282,7 +288,8 @@ namespace OctoAwesome
                 throw new ArgumentException("Size darf nicht kleiner als 1 sein");
 
             value %= size;
-            if (value < 0) value += size;
+            if (value < 0)
+                value += size;
             return value;
         }
 
@@ -339,8 +346,8 @@ namespace OctoAwesome
         public override int GetHashCode()
         {
             return 
-                (X << 16) + 
-                Y;
+                (X << 16) +
+            Y;
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace OctoAwesome.Runtime
 
         private const string ColumnFilename = "column_{0}_{1}.dat";
 
-        private DirectoryInfo root;        
+        private DirectoryInfo root;
 
         private string GetRoot()
         {
@@ -35,14 +35,16 @@ namespace OctoAwesome.Runtime
             if (!string.IsNullOrEmpty(appconfig))
             {
                 root = new DirectoryInfo(appconfig);
-                if (!root.Exists) root.Create();
+                if (!root.Exists)
+                    root.Create();
                 return root.FullName;
             }
             else
             {
                 var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 root = new DirectoryInfo(exePath + Path.DirectorySeparatorChar + "OctoMap");
-                if (!root.Exists) root.Create();
+                if (!root.Exists)
+                    root.Create();
                 return root.FullName;
             }
         }
@@ -136,7 +138,7 @@ namespace OctoAwesome.Runtime
             List<IUniverse> universes = new List<IUniverse>();
             foreach (var folder in Directory.GetDirectories(root))
             {
-                string id = folder.Replace(root + "\\", "");
+                string id = folder.Replace(root + Path.DirectorySeparatorChar, "");
                 Guid guid;
                 if (Guid.TryParse(id, out guid))
                     universes.Add(LoadUniverse(guid));
@@ -216,13 +218,14 @@ namespace OctoAwesome.Runtime
             if (!File.Exists(file))
                 return null;
 
-            try {
-            using (Stream stream = File.Open(file, FileMode.Open, FileAccess.Read))
+            try
             {
-                using (GZipStream zip = new GZipStream(stream, CompressionMode.Decompress))
+                using (Stream stream = File.Open(file, FileMode.Open, FileAccess.Read))
                 {
-                    return planet.Generator.GenerateColumn(zip, DefinitionManager.Instance, planet.Id, columnIndex);
-                }
+                    using (GZipStream zip = new GZipStream(stream, CompressionMode.Decompress))
+                    {
+                        return planet.Generator.GenerateColumn(zip, DefinitionManager.Instance, planet.Id, columnIndex);
+                    }
                 }
             }
             catch (IOException)
@@ -231,7 +234,9 @@ namespace OctoAwesome.Runtime
                 {
                     File.Delete(file);
                 }
-                catch (IOException) { }
+                catch (IOException)
+                {
+                }
                 return null;
             }
         }
@@ -251,7 +256,8 @@ namespace OctoAwesome.Runtime
 
             using (Stream stream = File.Open(file, FileMode.Open, FileAccess.Read))
             {
-                try {
+                try
+                {
                     XmlSerializer serializer = new XmlSerializer(typeof(Player));
                     return (Player)serializer.Deserialize(stream);
                 }

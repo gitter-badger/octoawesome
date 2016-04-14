@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using OctoAwesome.Runtime;
+﻿using OctoAwesome.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
+using engenious;
 
 namespace OctoAwesome.Client.Components
 {
@@ -17,7 +17,10 @@ namespace OctoAwesome.Client.Components
     {
         private Simulation Simulation { get; set; }
 
-        public SimulationComponent(Game game) : base(game) { }
+        public SimulationComponent(Game game)
+            : base(game)
+        {
+        }
 
         public void NewGame(string name, int? seed = null)
         {

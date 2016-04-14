@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using OctoAwesome.Client.Controls;
+﻿using OctoAwesome.Client.Controls;
 using OctoAwesome.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using engenious;
+using engenious.Graphics;
 
 namespace OctoAwesome.Client.Components
 {
@@ -75,29 +75,29 @@ namespace OctoAwesome.Client.Components
             if (!loaded)
                 return;
 
-            Matrix worldViewProj = Matrix.CreateTranslation(
-                shift.X * Chunk.CHUNKSIZE_X,
-                shift.Y * Chunk.CHUNKSIZE_Y,
-                shift.Z * Chunk.CHUNKSIZE_Z) * view * projection;
+            Matrix worldViewProj = projection * view * Matrix.CreateTranslation(
+                                       shift.X * Chunk.CHUNKSIZE_X,
+                                       shift.Y * Chunk.CHUNKSIZE_Y,
+                                       shift.Z * Chunk.CHUNKSIZE_Z);
 
             simple.Parameters["WorldViewProj"].SetValue(worldViewProj);
             simple.Parameters["BlockTextures"].SetValue(textures);
 
             simple.Parameters["AmbientIntensity"].SetValue(0.4f);
-            simple.Parameters["AmbientColor"].SetValue(Color.White.ToVector4());
+            simple.Parameters["AmbientColor"].SetValue(Color.White);
 
             lock (this)
             {
-                if (vb == null)
+                if (vb == null || ib == null)
                     return;
-
-                graphicsDevice.SetVertexBuffer(vb);
-                graphicsDevice.Indices = ib;
+                
+                graphicsDevice.VertexBuffer = vb;
+                graphicsDevice.IndexBuffer = ib;
 
                 foreach (var pass in simple.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertexCount, 0, indexCount / 3);
+                    graphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles, 0, 0, vertexCount, 0, indexCount / 3);
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace OctoAwesome.Client.Components
             float textureWidth = 1f / textureColumns;
             float texelSize = 1f / SceneControl.TEXTURESIZE;
             float textureSizeGap = texelSize;
-            float textureGap = texelSize/2;
+            float textureGap = texelSize / 2;
             // BlockTypes sammlen
             Dictionary<IBlockDefinition, int> textureOffsets = new Dictionary<IBlockDefinition, int>();
             // Dictionary<Type, BlockDefinition> definitionMapping = new Dictionary<Type, BlockDefinition>();
@@ -169,7 +169,8 @@ namespace OctoAwesome.Client.Components
                                 (((textureIndex + blockDefinition.GetTopTextureIndex(_manager, x, y, z)) % textureColumns) * textureWidth) + textureGap,
                                 (((textureIndex + blockDefinition.GetTopTextureIndex(_manager, x, y, z)) / textureColumns) * textureWidth) + textureGap);
 
-                            Vector2[] points = new[] {
+                            Vector2[] points = new[]
+                            {
                                 textureOffset,
                                 new Vector2(textureOffset.X + textureSize.X, textureOffset.Y),
                                 textureOffset + textureSize,
@@ -201,7 +202,8 @@ namespace OctoAwesome.Client.Components
                                 (((textureIndex + blockDefinition.GetBottomTextureIndex(_manager, x, y, z)) % textureColumns) * textureWidth) + textureGap,
                                 (((textureIndex + blockDefinition.GetBottomTextureIndex(_manager, x, y, z)) / textureColumns) * textureWidth) + textureGap);
 
-                            Vector2[] points = new[] {
+                            Vector2[] points = new[]
+                            {
                                 textureOffset,
                                 new Vector2(textureOffset.X + textureSize.X, textureOffset.Y),
                                 textureOffset + textureSize,
@@ -232,7 +234,8 @@ namespace OctoAwesome.Client.Components
                                 (((textureIndex + blockDefinition.GetSouthTextureIndex(_manager, x, y, z)) % textureColumns) * textureWidth) + textureGap,
                                 (((textureIndex + blockDefinition.GetSouthTextureIndex(_manager, x, y, z)) / textureColumns) * textureWidth) + textureGap);
 
-                            Vector2[] points = new[] {
+                            Vector2[] points = new[]
+                            {
                                 textureOffset,
                                 new Vector2(textureOffset.X + textureSize.X, textureOffset.Y),
                                 textureOffset + textureSize,
@@ -264,7 +267,8 @@ namespace OctoAwesome.Client.Components
                                 (((textureIndex + blockDefinition.GetNorthTextureIndex(_manager, x, y, z)) % textureColumns) * textureWidth) + textureGap,
                                 (((textureIndex + blockDefinition.GetNorthTextureIndex(_manager, x, y, z)) / textureColumns) * textureWidth) + textureGap);
 
-                            Vector2[] points = new[] {
+                            Vector2[] points = new[]
+                            {
                                 textureOffset,
                                 new Vector2(textureOffset.X + textureSize.X, textureOffset.Y),
                                 textureOffset + textureSize,
@@ -295,7 +299,8 @@ namespace OctoAwesome.Client.Components
                                 (((textureIndex + blockDefinition.GetWestTextureIndex(_manager, x, y, z)) % textureColumns) * textureWidth) + textureGap,
                                 (((textureIndex + blockDefinition.GetWestTextureIndex(_manager, x, y, z)) / textureColumns) * textureWidth) + textureGap);
 
-                            Vector2[] points = new[] {
+                            Vector2[] points = new[]
+                            {
                                 textureOffset,
                                 new Vector2(textureOffset.X + textureSize.X, textureOffset.Y),
                                 textureOffset + textureSize,
@@ -326,7 +331,8 @@ namespace OctoAwesome.Client.Components
                                 (((textureIndex + blockDefinition.GetEastTextureIndex(_manager, x, y, z)) % textureColumns) * textureWidth) + textureGap,
                                 (((textureIndex + blockDefinition.GetEastTextureIndex(_manager, x, y, z)) / textureColumns) * textureWidth) + textureGap);
 
-                            Vector2[] points = new[] {
+                            Vector2[] points = new[]
+                            {
                                 textureOffset,
                                 new Vector2(textureOffset.X + textureSize.X, textureOffset.Y),
                                 textureOffset + textureSize,
@@ -354,33 +360,33 @@ namespace OctoAwesome.Client.Components
             vertexCount = vertices.Count;
             indexCount = index.Count;
 
-            VertexBuffer vb2 = null;
             IndexBuffer ib2 = null;
             if (vertexCount > 0)
             {
                 try
                 {
-                    vb2 = new VertexBuffer(graphicsDevice, VertexPositionNormalTexture.VertexDeclaration, vertexCount, BufferUsage.WriteOnly);
-                    vb2.SetData<VertexPositionNormalTexture>(vertices.ToArray());
+                    if (vb == null)
+                        vb = new VertexBuffer(graphicsDevice, VertexPositionNormalTexture.VertexDeclaration, vertexCount);
+                    else
+                        vb.Resize(vertexCount);
+                    vb.SetData<VertexPositionNormalTexture>(vertices.ToArray());
 
-                    ib2 = new IndexBuffer(graphicsDevice, IndexElementSize.ThirtyTwoBits, indexCount, BufferUsage.WriteOnly);
+                    ib2 = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedInt, indexCount);
                     ib2.SetData<int>(index.ToArray());
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                }
             }
-
-            VertexBuffer vbOld = vb;
+                
             IndexBuffer ibOld = ib;
 
             lock (this)
             {
-                vb = vb2;
                 ib = ib2;
                 loaded = true;
             }
-
-            if (vbOld != null)
-                vbOld.Dispose();
+                
 
             if (ibOld != null)
                 ibOld.Dispose();

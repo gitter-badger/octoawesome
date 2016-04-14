@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoGameUi;
+﻿using MonoGameUi;
 using OctoAwesome.Client.Components;
+using engenious.Graphics;
 
 namespace OctoAwesome.Client.Screens
 {
@@ -8,7 +8,8 @@ namespace OctoAwesome.Client.Screens
     {
         private PlayerComponent player;
 
-        public InventoryScreen(ScreenComponent manager) : base(manager)
+        public InventoryScreen(ScreenComponent manager)
+            : base(manager)
         {
             player = manager.Player;
             IsOverlay = true;
@@ -29,7 +30,10 @@ namespace OctoAwesome.Client.Screens
             Controls.Add(headLine);
 
             Button closeButton = Button.TextButton(manager, Languages.OctoClient.Close);
-            closeButton.LeftMouseClick += (s, e) => { manager.NavigateBack(); };
+            closeButton.LeftMouseClick += (s, e) =>
+            {
+                manager.NavigateBack();
+            };
             Controls.Add(closeButton);
 
             //counter = new LabelControl(ScreenManager)

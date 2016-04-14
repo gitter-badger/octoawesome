@@ -16,6 +16,7 @@ namespace OctoAwesome.Basics
         {
             private int originX, originY, originZ;
             IChunkColumn column00, column01, column10, column11;
+
             public PopulationHelper(int originX, int originY, int originZ, IChunkColumn column00, IChunkColumn column10, IChunkColumn column01, IChunkColumn column11)
             {
                 this.originX = originX;
@@ -27,6 +28,7 @@ namespace OctoAwesome.Basics
                 this.column10 = column10;
                 this.column11 = column11;
             }
+
             public static IChunkColumn getColumn(IChunkColumn column00, IChunkColumn column10, IChunkColumn column01, IChunkColumn column11, int x, int y)
             {
                 IChunkColumn column;
@@ -42,6 +44,7 @@ namespace OctoAwesome.Basics
 
                 return column;
             }
+
             public void SetBlock(int x, int y, int z, ushort block, int meta = 0)
             {
                 x += originX;
@@ -52,6 +55,7 @@ namespace OctoAwesome.Basics
                 y %= Chunk.CHUNKSIZE_Y;
                 column.SetBlock(x, y, z, block, meta);
             }
+
             public void FillSphere(int x, int y, int z, int radius, ushort block, int meta = 0)
             {
                 for (int i = -radius; i <= radius; i++)
@@ -66,6 +70,7 @@ namespace OctoAwesome.Basics
                     }
                 }
             }
+
             public ushort GetBlock(int x, int y, int z)
             {
                 return 0;//TODO: implement
@@ -87,6 +92,11 @@ namespace OctoAwesome.Basics
             int salt = (column00.Index.X & 0xffff) + ((column00.Index.Y & 0xffff) << 16);
             Random random = new Random(planet.Seed + salt);
 
+            column00.BeginBatch();
+            column01.BeginBatch();
+            column10.BeginBatch();
+            column11.BeginBatch();
+
             IBlockDefinition woodDefinition = blockDefinitions.FirstOrDefault(d => typeof(WoodBlockDefinition) == d.GetType());
             ushort woodIndex = (ushort)(Array.IndexOf(blockDefinitions.ToArray(), woodDefinition) + 1);
             IBlockDefinition leaveDefinition = blockDefinitions.FirstOrDefault(d => typeof(LeavesBlockDefinition) == d.GetType());
@@ -105,6 +115,11 @@ namespace OctoAwesome.Basics
                 int height = random.Next(6, 16);
                 PlantTree(helper, 0, 0, 0, height, random.Next(3, height - 2), woodIndex, leaveIndex);
             }
+
+            column00.EndBatch();
+            column01.EndBatch();
+            column10.EndBatch();
+            column11.EndBatch();
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoGameUi;
+﻿using MonoGameUi;
 using System.Collections.Generic;
 using OctoAwesome.Runtime;
 using OctoAwesome.Client.Components;
 using System;
+using engenious;
+using engenious.Graphics;
 
 namespace OctoAwesome.Client.Controls
 {
@@ -145,12 +144,12 @@ namespace OctoAwesome.Client.Controls
             //Draw Rotation
             float grad = (Player.ActorHost.Angle / MathHelper.TwoPi) * 360;
             string rot = "rot: " +
-                (((Player.ActorHost.Angle / MathHelper.TwoPi) * 360) % 360).ToString("0.00") + " / " +
-                ((Player.ActorHost.Tilt / MathHelper.TwoPi) * 360).ToString("0.00");
+                         (((Player.ActorHost.Angle / MathHelper.TwoPi) * 360) % 360).ToString("0.00") + " / " +
+                         ((Player.ActorHost.Tilt / MathHelper.TwoPi) * 360).ToString("0.00");
             rotation.Text = rot;
 
             //Draw Fps
-            string fpsString = "fps: " + (1f / lastfps).ToString("0.00");
+            string fpsString = "fps: " + (1f / lastfps).ToString("0.00") + ":" + Player.ActorHost.ReadyState.ToString();
             fps.Text = fpsString;
 
             //Draw Loaded Chunks
@@ -158,7 +157,7 @@ namespace OctoAwesome.Client.Controls
 
             //Get Number of Loaded Items/Blocks
             loadedInfo.Text = "" + (DefinitionManager.Instance.GetItemDefinitions() as IList<IItemDefinition>).Count + " " + Languages.OctoClient.Items + " - " +
-                (DefinitionManager.Instance.GetBlockDefinitions() as IList<IItemDefinition>).Count + " " + Languages.OctoClient.Blocks;
+            (DefinitionManager.Instance.GetBlockDefinitions() as IList<IItemDefinition>).Count + " " + Languages.OctoClient.Blocks;
 
             //Additional Play Information
 
@@ -166,19 +165,21 @@ namespace OctoAwesome.Client.Controls
             if (Player.ActorHost.ActiveTool != null)
                 activeTool.Text = Languages.OctoClient.ActiveItemTool + ": " + Player.ActorHost.ActiveTool.Definition.Name;
 
-                //Fly Info
-                if (Player.ActorHost.Player.FlyMode) flyInfo.Text = Languages.OctoClient.FlymodeEnabled;
-                else flyInfo.Text = "";
+            //Fly Info
+            if (Player.ActorHost.Player.FlyMode)
+                flyInfo.Text = Languages.OctoClient.FlymodeEnabled;
+            else
+                flyInfo.Text = "";
 
             //Draw Box Information
             if (Player.SelectedBox.HasValue)
             {
                 string selection = "box: " +
-                    Player.SelectedBox.Value.ToString() + " on " +
-                    Player.SelectedSide.ToString() + " (" +
-                    Player.SelectedPoint.Value.X.ToString("0.00") + "/" +
-                    Player.SelectedPoint.Value.Y.ToString("0.00") + ") -> " +
-                    Player.SelectedEdge.ToString() + " -> " + Player.SelectedCorner.ToString();
+                                   Player.SelectedBox.Value.ToString() + " on " +
+                                   Player.SelectedSide.ToString() + " (" +
+                                   Player.SelectedPoint.Value.X.ToString("0.00") + "/" +
+                                   Player.SelectedPoint.Value.Y.ToString("0.00") + ") -> " +
+                                   Player.SelectedEdge.ToString() + " -> " + Player.SelectedCorner.ToString();
                 box.Text = selection;
             }
             else
